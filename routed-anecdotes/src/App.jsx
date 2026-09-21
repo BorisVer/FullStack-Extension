@@ -6,8 +6,6 @@ import About from './components/About'
 import Footer from './components/Footer'
 import CreateNew from './components/CreateNew'
 
-import { useField } from './hooks'
-
 const App = () => {
   const [anecdotes, setAnecdotes] = useState([
     {
