@@ -1,4 +1,4 @@
-const baseUrl = 'http://localhost:3001/anecdotes'
+const baseUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3001/anecdotes'
 
 const getAll = async () => {
   const response = await fetch(baseUrl)
@@ -24,7 +24,7 @@ const createNew = async (object) => {
   return await response.json()
 }
 
-const deleteAnecdote = async (id) => {
+const remove = async (id) => {
   const response = await fetch(`${baseUrl}/${id}`, {
     method: 'DELETE',
   })
@@ -34,4 +34,4 @@ const deleteAnecdote = async (id) => {
   }
 }
 
-export default { getAll, createNew, deleteAnecdote }
+export default { getAll, createNew, remove }

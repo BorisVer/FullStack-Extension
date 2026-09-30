@@ -10,9 +10,9 @@ const CreateNew = () => {
   const { addAnecdote } = useAnecdotes()
 
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
-    addAnecdote({
+    await addAnecdote({
       content: content.input.value,
       author: author.input.value,
       info: info.input.value,
