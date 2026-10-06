@@ -2,7 +2,6 @@ import { useState } from "react";
 import { TextField, Button } from "@mui/material";
 
 const LoginForm = ({ handleLogin }) => {
-
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const handleSubmit = (event) => {

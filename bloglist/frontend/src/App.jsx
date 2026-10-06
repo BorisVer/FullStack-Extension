@@ -7,8 +7,18 @@ import BlogForm from "./components/BlogForm";
 import OneBlog from "./components/OneBlog";
 import LoginForm from "./components/LoginForm";
 import { AppBar, Toolbar, Button, Alert, Typography } from "@mui/material";
+import { ErrorBoundary } from 'react-error-boundary';
 
 
+const ErrorFallback = ({ error, resetErrorBoundary }) => {
+  return (
+    <div role="alert">
+      <h2>AN ERROR!!!!!!!</h2>
+      <p>{error.message}</p>
+      <button onClick={resetErrorBoundary}>try again</button>
+    </div>
+  );
+};
 
 const App = () => {
   const [blogs, setBlogs] = useState([]);
@@ -146,13 +156,15 @@ const App = () => {
         </Toolbar>
       </AppBar>
       <Notification notification={notification} />
-      <Routes>
-        <Route path="/" element={blogList()} />
-        <Route path="/login" element={<LoginForm handleLogin={handleLogin} />} />
-        <Route path="/create" element={<BlogForm createBlog={addBlog} />} />
-        <Route path="/blogs/:id" element={<OneBlog blog={matchedBlog} user={user} addLike={addLike} removeBlog={removeBlog}/>}
-        />
-      </Routes>
+      <ErrorBoundary FallbackComponent={ErrorFallback}>
+        <Routes>
+          <Route path="/" element={blogList()} />
+          <Route path="/login" element={<LoginForm handleLogin={handleLogin} />} />
+          <Route path="/create" element={<BlogForm createBlog={addBlog} />} />
+          <Route path="/blogs/:id" element={<OneBlog blog={matchedBlog} user={user} addLike={addLike} removeBlog={removeBlog}/>}
+          />
+        </Routes>
+      </ErrorBoundary>
     </div>
   );
 };
