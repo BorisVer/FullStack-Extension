@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { Routes, Route, Link, useNavigate, useMatch } from "react-router-dom";
+import useNotificationStore from "./store/notificationStore";
 import Blog from "./components/Blog";
 import blogService from "./services/blogs";
 import loginService from "./services/login";
@@ -24,7 +25,9 @@ const App = () => {
 
   const [user, setUser] = useState(null);
 
-  const [notification, setNotification] = useState(null);
+  const setNotification = useNotificationStore(
+    (state) => state.setNotification,
+  );
 
   const navigate = useNavigate();
 
@@ -54,10 +57,7 @@ const App = () => {
       setUser(user);
       navigate("/");
     } catch {
-      setNotification({ text: "wrong username or password", type: "error" });
-      setTimeout(() => {
-        setNotification(null);
-      }, 5000);
+      setNotification("wrong username or password", "error");
     }
   };
 
@@ -71,13 +71,10 @@ const App = () => {
     const returnedBlog = await blogService.create(blogObject);
     const allBlogs = await blogService.getAll();
     setBlogs(allBlogs);
-    setNotification({
-      text: `a new blog ${returnedBlog.title} by ${returnedBlog.author} added`,
-      type: "success",
-    });
-    setTimeout(() => {
-      setNotification(null);
-    }, 5000);
+    setNotification(
+      `a new blog ${returnedBlog.title} by ${returnedBlog.author} added`,
+      "success",
+    );
     navigate("/");
   };
 
@@ -127,18 +124,21 @@ const App = () => {
 
   const hoverStyle = { "&:hover": { bgcolor: "lightgray" } };
 
-  const Notification = ({ notification }) => {
-    if (notification === null) {
+  const Notification = () => {
+    const notification = useNotificationStore((state) => state.notification);
+
+    if (notification == null) {
       return null;
+    } else {
+      return (
+        <Alert
+          style={{ marginTop: 10, marginBottom: 10 }}
+          severity={notification.type}
+        >
+          {notification.text}
+        </Alert>
+      );
     }
-    return (
-      <Alert
-        style={{ marginTop: 10, marginBottom: 10 }}
-        severity={notification.type}
-      >
-        {notification.text}
-      </Alert>
-    );
   };
 
   return (
@@ -170,7 +170,7 @@ const App = () => {
           )}
         </Toolbar>
       </AppBar>
-      <Notification notification={notification} />
+      <Notification />
       <ErrorBoundary FallbackComponent={ErrorFallback}>
         <Routes>
           <Route path="/" element={blogList()} />
