@@ -2,7 +2,7 @@ import { Card, CardContent, Typography, CardActions, Button, Link } from "@mui/m
 
 const OneBlog = ({ blog, user, addLike, removeBlog }) => {
   if (!blog) {
-    return null;
+    return <h2>404 - Page not found</h2>
   }
 
   const isOwner = user && blog.user && (user.username === blog.user.username);
