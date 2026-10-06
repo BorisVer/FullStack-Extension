@@ -7,8 +7,7 @@ import BlogForm from "./components/BlogForm";
 import OneBlog from "./components/OneBlog";
 import LoginForm from "./components/LoginForm";
 import { AppBar, Toolbar, Button, Alert, Typography } from "@mui/material";
-import { ErrorBoundary } from 'react-error-boundary';
-
+import { ErrorBoundary } from "react-error-boundary";
 
 const ErrorFallback = ({ error, resetErrorBoundary }) => {
   return (
@@ -123,21 +122,24 @@ const App = () => {
     }
   };
 
-  console.log('Current user in App:', user)
-  console.log('User username:', user?.username)
+  console.log("Current user in App:", user);
+  console.log("User username:", user?.username);
 
-  const hoverStyle = { "&:hover": { bgcolor: "lightgray" } }
+  const hoverStyle = { "&:hover": { bgcolor: "lightgray" } };
 
   const Notification = ({ notification }) => {
     if (notification === null) {
-      return null
+      return null;
     }
     return (
-      <Alert style={{ marginTop: 10, marginBottom: 10 }} severity={notification.type}>
+      <Alert
+        style={{ marginTop: 10, marginBottom: 10 }}
+        severity={notification.type}
+      >
         {notification.text}
       </Alert>
-    )
-  }
+    );
+  };
 
   return (
     <div>
@@ -146,12 +148,25 @@ const App = () => {
           <Typography variant="h6" component="div" sx={{ flexGrow: 0.1 }}>
             Blog App
           </Typography>
-          <Button color="inherit" component={Link} to="/" sx={hoverStyle} >blogs</Button>
-          <Button color="inherit" component={Link} to="/create" sx={hoverStyle}>new blog</Button>
+          <Button color="inherit" component={Link} to="/" sx={hoverStyle}>
+            blogs
+          </Button>
+          <Button color="inherit" component={Link} to="/create" sx={hoverStyle}>
+            new blog
+          </Button>
           {user ? (
-            <Button  color="inherit" onClick={handleLogout} sx={hoverStyle}>logout</Button>
+            <Button color="inherit" onClick={handleLogout} sx={hoverStyle}>
+              logout
+            </Button>
           ) : (
-            <Button color="inherit" component={Link} to="/login" sx={hoverStyle}>login</Button>
+            <Button
+              color="inherit"
+              component={Link}
+              to="/login"
+              sx={hoverStyle}
+            >
+              login
+            </Button>
           )}
         </Toolbar>
       </AppBar>
@@ -159,11 +174,23 @@ const App = () => {
       <ErrorBoundary FallbackComponent={ErrorFallback}>
         <Routes>
           <Route path="/" element={blogList()} />
-          <Route path="/login" element={<LoginForm handleLogin={handleLogin} />} />
-          <Route path="/create" element={<BlogForm createBlog={addBlog} />} />
-          <Route path="/blogs/:id" element={<OneBlog blog={matchedBlog} user={user} addLike={addLike} removeBlog={removeBlog}/>}
+          <Route
+            path="/login"
+            element={<LoginForm handleLogin={handleLogin} />}
           />
-          <Route path="*" element={<h1>404 - Page not found</h1>}/>
+          <Route path="/create" element={<BlogForm createBlog={addBlog} />} />
+          <Route
+            path="/blogs/:id"
+            element={
+              <OneBlog
+                blog={matchedBlog}
+                user={user}
+                addLike={addLike}
+                removeBlog={removeBlog}
+              />
+            }
+          />
+          <Route path="*" element={<h1>404 - Page not found</h1>} />
         </Routes>
       </ErrorBoundary>
     </div>
