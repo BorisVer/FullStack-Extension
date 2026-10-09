@@ -1,12 +1,16 @@
 import { useState, useEffect } from "react";
 import { Routes, Route, Link, useNavigate, useMatch } from "react-router-dom";
+
 import useNotificationStore from "./store/notificationStore";
+import useBlogStore from "./store/blogStore";
+
 import Blog from "./components/Blog";
 import blogService from "./services/blogs";
 import loginService from "./services/login";
 import BlogForm from "./components/BlogForm";
 import OneBlog from "./components/OneBlog";
 import LoginForm from "./components/LoginForm";
+
 import { AppBar, Toolbar, Button, Alert, Typography } from "@mui/material";
 import { ErrorBoundary } from "react-error-boundary";
 
@@ -21,7 +25,13 @@ const ErrorFallback = ({ error, resetErrorBoundary }) => {
 };
 
 const App = () => {
-  const [blogs, setBlogs] = useState([]);
+  const blogs = useBlogStore((state) => state.blogs);
+  const initializeBlogs = useBlogStore((state) => state.initializeBlogs);
+  const createBlog = useBlogStore((state) => state.createBlog);
+
+  useEffect(() => {
+    initializeBlogs();
+  }, []);
 
   const [user, setUser] = useState(null);
 
@@ -35,10 +45,6 @@ const App = () => {
   const matchedBlog = match
     ? blogs.find((blog) => blog.id === match.params.id)
     : null;
-
-  useEffect(() => {
-    blogService.getAll().then((blogs) => setBlogs(blogs));
-  }, []);
 
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem("loggedBlogappUser");
@@ -68,9 +74,8 @@ const App = () => {
   };
 
   const addBlog = async (blogObject) => {
-    const returnedBlog = await blogService.create(blogObject);
-    const allBlogs = await blogService.getAll();
-    setBlogs(allBlogs);
+    const returnedBlog = await createBlog(blogObject);
+
     setNotification(
       `a new blog ${returnedBlog.title} by ${returnedBlog.author} added`,
       "success",
