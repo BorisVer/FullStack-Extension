@@ -1,0 +1,30 @@
+import { create } from "zustand";
+import loginService from "../services/login";
+import blogService from "../services/blogs";
+
+const useUserStore = create((set) => ({
+  user: null,
+
+  initializeUser: () => {
+    const loggedUserJSON = window.localStorage.getItem("loggedBlogappUser");
+    if (loggedUserJSON) {
+      const user = JSON.parse(loggedUserJSON);
+      blogService.setToken(user.token);
+      set({ user });
+    }
+  },
+
+  login: async (userObject) => {
+    const user = await loginService.login(userObject);
+    window.localStorage.setItem("loggedBlogappUser", JSON.stringify(user));
+    blogService.setToken(user.token);
+    set ({ user })
+  },
+
+  logout: () => {
+    window.localStorage.removeItem("loggedBlogappUser")
+    set({ user: null })
+  }
+}));
+
+export default useUserStore

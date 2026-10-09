@@ -3,6 +3,7 @@ import { Routes, Route, Link, useNavigate, useMatch } from "react-router-dom";
 
 import useNotificationStore from "./store/notificationStore";
 import useBlogStore from "./store/blogStore";
+import useUserStore from "./store/userStore";
 
 import Blog from "./components/Blog";
 import blogService from "./services/blogs";
@@ -25,6 +26,7 @@ const ErrorFallback = ({ error, resetErrorBoundary }) => {
 };
 
 const App = () => {
+  // Blogs
   const blogs = useBlogStore((state) => state.blogs);
   const initializeBlogs = useBlogStore((state) => state.initializeBlogs);
   const createBlog = useBlogStore((state) => state.createBlog);
@@ -35,7 +37,15 @@ const App = () => {
     initializeBlogs();
   }, []);
 
-  const [user, setUser] = useState(null);
+  // User
+  const user = useUserStore((state) => state.user);
+  const initializeUser = useUserStore((state) => state.initializeUser);
+  const loginUser = useUserStore((state) => state.login);
+  const logoutUser = useUserStore((state) => state.logout);
+
+  useEffect(() => {
+    initializeUser();
+  }, []);
 
   const setNotification = useNotificationStore(
     (state) => state.setNotification,
@@ -48,21 +58,9 @@ const App = () => {
     ? blogs.find((blog) => blog.id === match.params.id)
     : null;
 
-  useEffect(() => {
-    const loggedUserJSON = window.localStorage.getItem("loggedBlogappUser");
-    if (loggedUserJSON) {
-      const user = JSON.parse(loggedUserJSON);
-      setUser(user);
-      blogService.setToken(user.token);
-    }
-  }, []);
-
   const handleLogin = async (userObject) => {
     try {
-      const user = await loginService.login(userObject);
-      window.localStorage.setItem("loggedBlogappUser", JSON.stringify(user));
-      blogService.setToken(user.token);
-      setUser(user);
+      await loginUser(userObject);
       navigate("/");
     } catch {
       setNotification("wrong username or password", "error");
@@ -70,8 +68,7 @@ const App = () => {
   };
 
   const handleLogout = () => {
-    window.localStorage.removeItem("loggedBlogappUser");
-    setUser(null);
+    logoutUser();
     navigate("/");
   };
 
