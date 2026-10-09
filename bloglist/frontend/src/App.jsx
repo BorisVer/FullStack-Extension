@@ -28,6 +28,8 @@ const App = () => {
   const blogs = useBlogStore((state) => state.blogs);
   const initializeBlogs = useBlogStore((state) => state.initializeBlogs);
   const createBlog = useBlogStore((state) => state.createBlog);
+  const likeBlog = useBlogStore((state) => state.likeBlog);
+  const deleteBlog = useBlogStore((state) => state.removeBlog);
 
   useEffect(() => {
     initializeBlogs();
@@ -110,16 +112,14 @@ const App = () => {
       url: blog.url,
     };
 
-    const returnedBlog = await blogService.update(id, updatedBlog);
-    setBlogs(blogs.map((b) => (b.id !== id ? b : returnedBlog)));
+    await likeBlog(id, updatedBlog);
   };
 
   const removeBlog = async (id) => {
     const blog = blogs.find((b) => b.id === id);
 
     if (window.confirm(`Remove blog ${blog.title} by ${blog.author}?`)) {
-      await blogService.remove(id);
-      setBlogs(blogs.filter((b) => b.id !== id));
+      await deleteBlog(id);
       navigate("/");
     }
   };
