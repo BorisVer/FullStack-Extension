@@ -11,6 +11,7 @@ import loginService from "./services/login";
 import BlogForm from "./components/BlogForm";
 import OneBlog from "./components/OneBlog";
 import LoginForm from "./components/LoginForm";
+import Users from "./components/Users";
 
 import { AppBar, Toolbar, Button, Alert, Typography } from "@mui/material";
 import { ErrorBoundary } from "react-error-boundary";
@@ -156,6 +157,9 @@ const App = () => {
           <Button color="inherit" component={Link} to="/create" sx={hoverStyle}>
             new blog
           </Button>
+          <Button color="inherit" component={Link} to="/users" sx={hoverStyle}>
+            users
+          </Button>
           {user ? (
             <Button color="inherit" onClick={handleLogout} sx={hoverStyle}>
               logout
@@ -192,6 +196,7 @@ const App = () => {
               />
             }
           />
+          <Route path="/users" element={<Users />} />
           <Route path="*" element={<h1>404 - Page not found</h1>} />
         </Routes>
       </ErrorBoundary>
