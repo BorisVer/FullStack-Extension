@@ -7,6 +7,8 @@ import {
   Link,
 } from "@mui/material";
 
+import CommentForm from "./CommentForm";
+
 const OneBlog = ({ blog, user, addLike, removeBlog }) => {
   if (!blog) {
     return <h2>404 - Page not found</h2>;
@@ -53,6 +55,7 @@ const OneBlog = ({ blog, user, addLike, removeBlog }) => {
         )}
       </CardActions>
       <h3>comments</h3>
+      <CommentForm blogId={blog.id} />
       <ul>
         {(blog.comments ?? []).map((comment, index) => (
           <li key={index}>{comment}</li>
