@@ -4,14 +4,17 @@ import { Routes, Route, Link, useNavigate, useMatch } from "react-router-dom";
 import useNotificationStore from "./store/notificationStore";
 import useBlogStore from "./store/blogStore";
 import useUserStore from "./store/userStore";
+import useUserListStore from "./store/userListStore";
 
 import Blog from "./components/Blog";
-import blogService from "./services/blogs";
-import loginService from "./services/login";
 import BlogForm from "./components/BlogForm";
 import OneBlog from "./components/OneBlog";
 import LoginForm from "./components/LoginForm";
 import Users from "./components/Users";
+import User from "./components/User";
+
+import blogService from "./services/blogs";
+import loginService from "./services/login";
 
 import { AppBar, Toolbar, Button, Alert, Typography } from "@mui/material";
 import { ErrorBoundary } from "react-error-boundary";
@@ -33,6 +36,12 @@ const App = () => {
   const createBlog = useBlogStore((state) => state.createBlog);
   const likeBlog = useBlogStore((state) => state.likeBlog);
   const deleteBlog = useBlogStore((state) => state.removeBlog);
+  const users = useUserListStore((state) => state.users);
+  const fetchUsers = useUserListStore((state) => state.fetchUsers);
+
+  useEffect(() => {
+    fetchUsers();
+  }, []);
 
   useEffect(() => {
     initializeBlogs();
@@ -57,6 +66,11 @@ const App = () => {
   const match = useMatch("/blogs/:id");
   const matchedBlog = match
     ? blogs.find((blog) => blog.id === match.params.id)
+    : null;
+
+  const userMatch = useMatch("/users/:id");
+  const matchedUser = userMatch
+    ? users.find((u) => u.id === userMatch.params.id)
     : null;
 
   const handleLogin = async (userObject) => {
@@ -197,6 +211,7 @@ const App = () => {
             }
           />
           <Route path="/users" element={<Users />} />
+          <Route path="/users/:id" element={<User user={matchedUser} />} />
           <Route path="*" element={<h1>404 - Page not found</h1>} />
         </Routes>
       </ErrorBoundary>
