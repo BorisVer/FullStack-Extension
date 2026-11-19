@@ -1,14 +1,14 @@
 import { create } from "zustand";
 import loginService from "../services/login";
 import blogService from "../services/blogs";
+import { getUser, saveUser, removeUser } from "../services/persistentUser";
 
 const useUserStore = create((set) => ({
   user: null,
 
   initializeUser: () => {
-    const loggedUserJSON = window.localStorage.getItem("loggedBlogappUser");
-    if (loggedUserJSON) {
-      const user = JSON.parse(loggedUserJSON);
+    const user = getUser();
+    if (user) {
       blogService.setToken(user.token);
       set({ user });
     }
@@ -16,15 +16,15 @@ const useUserStore = create((set) => ({
 
   login: async (userObject) => {
     const user = await loginService.login(userObject);
-    window.localStorage.setItem("loggedBlogappUser", JSON.stringify(user));
+    saveUser(user);
     blogService.setToken(user.token);
-    set ({ user })
+    set({ user });
   },
 
   logout: () => {
-    window.localStorage.removeItem("loggedBlogappUser")
-    set({ user: null })
-  }
+    removeUser();
+    set({ user: null });
+  },
 }));
 
-export default useUserStore
+export default useUserStore;

@@ -13,9 +13,11 @@ export default defineConfig({
   webServer: [
     {
       command: "npm run start:test",
-      cwd: "../bloglist/backend",
+      cwd: "../bloglist/server",
       url: "http://localhost:3001/api/blogs",
       reuseExistingServer: !process.env.CI,
+      stdout: "pipe",
+      stderr: "pipe",
     },
     {
       command: "npm run dev",
