@@ -82,4 +82,22 @@ blogsRouter.delete("/:id", userExtractor, async (request, response, next) => {
   }
 });
 
+blogsRouter.post("/:id/comments", async (request, response) => {
+  const { comment } = request.body;
+
+  if (!comment) {
+    return response.status(400).json({ error: "comment missing" });
+  }
+
+  const blog = await Blog.findById(request.params.id);
+  if (!blog) {
+    return response.status(404).end();
+  }
+
+  blog.comments = blog.comments.concat(comment);
+  const savedBlog = await blog.save();
+
+  response.status(201).json(savedBlog);
+});
+
 module.exports = blogsRouter;
