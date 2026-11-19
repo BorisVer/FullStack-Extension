@@ -5,8 +5,11 @@ import {
   CardActions,
   Button,
   Link,
+  Paper,
+  List,
+  ListItem,
+  ListItemText,
 } from "@mui/material";
-
 import CommentForm from "./CommentForm";
 
 const OneBlog = ({ blog, user, addLike, removeBlog }) => {
@@ -54,13 +57,19 @@ const OneBlog = ({ blog, user, addLike, removeBlog }) => {
           </Button>
         )}
       </CardActions>
-      <h3>comments</h3>
+      <Typography variant="h6" sx={{ mt: 3, mb: 1 }}>
+        comments
+      </Typography>
       <CommentForm blogId={blog.id} />
-      <ul>
-        {(blog.comments ?? []).map((comment, index) => (
-          <li key={index}>{comment}</li>
-        ))}
-      </ul>
+      <Paper sx={{ mt: 2 }}>
+        <List dense>
+          {(blog.comments ?? []).map((comment, index) => (
+            <ListItem key={index} divider>
+              <ListItemText primary={comment} />
+            </ListItem>
+          ))}
+        </List>
+      </Paper>
     </Card>
   );
 };

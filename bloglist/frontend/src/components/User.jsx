@@ -1,4 +1,12 @@
 import { Link } from "react-router-dom";
+import {
+  Typography,
+  Paper,
+  List,
+  ListItem,
+  ListItemButton,
+  ListItemText,
+} from "@mui/material";
 
 const User = ({ user }) => {
   if (!user) {
@@ -7,15 +15,28 @@ const User = ({ user }) => {
 
   return (
     <div>
-      <h2>{user.name}</h2>
-      <h3>added blogs</h3>
-      <ul>
-        {user.blogs.map((blog) => (
-          <li key={blog.id}>
-            <Link to={`/blogs/${blog.id}`}>{blog.title}</Link>
-          </li>
-        ))}
-      </ul>
+      <Typography variant="h4" sx={{ mt: 2 }}>
+        {user.name}
+      </Typography>
+      <Typography variant="h6" sx={{ mt: 2, mb: 1 }}>
+        added blogs
+      </Typography>
+      <Paper>
+        <List>
+          {user.blogs.length === 0 && (
+            <ListItem>
+              <ListItemText secondary="no blogs yet" />
+            </ListItem>
+          )}
+          {user.blogs.map((blog) => (
+            <ListItem key={blog.id} disablePadding>
+              <ListItemButton component={Link} to={`/blogs/${blog.id}`}>
+                <ListItemText primary={blog.title} />
+              </ListItemButton>
+            </ListItem>
+          ))}
+        </List>
+      </Paper>
     </div>
   );
 };

@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { TextField, Button } from "@mui/material";
 import useBlogStore from "../store/blogStore";
 
 const CommentForm = ({ blogId }) => {
@@ -13,12 +14,17 @@ const CommentForm = ({ blogId }) => {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <input
+    <form onSubmit={handleSubmit} style={{ display: "flex", gap: 10 }}>
+      <TextField
+        label="write a comment"
+        size="small"
+        fullWidth
         value={comment}
         onChange={(event) => setComment(event.target.value)}
       />
-      <button type="submit">add comment</button>
+      <Button type="submit" variant="contained">
+        add comment
+      </Button>
     </form>
   );
 };
